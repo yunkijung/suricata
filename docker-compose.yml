@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  suricata:
+    container_name: suricata
+    image: jasonish/suricata:latest
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_NICE
+    volumes:
+      - ./logs:/var/log/suricata
+      - ./suricata-config:/etc/suricata
+      - ./rules:/var/lib/suricata/rules
+    command: ["-i", "ens5"]
+    restart: unless-stopped
+
