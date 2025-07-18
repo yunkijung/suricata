@@ -4,3 +4,10 @@ alert http any any -> any any (msg:"[ATTACK] SQL Injection attempt - UNION SELEC
 alert http any any -> any any (msg:"[ATTACK] Possible XSS attempt (script tag)"; content:"<script>"; nocase; http_client_body; sid:2000004; rev:1;)
 alert http any any -> any any (msg:"[ATTACK] SQLMap tool detected in User-Agent"; content:"sqlmap"; http_user_agent; nocase; sid:2000005; rev:1;)
 
+# 4. SQL Injection
+alert tcp any any -> any any (msg:"4. SQL Injection UNION SELECT"; flow:established,to_server; content:"UNION"; nocase; http_uri; content:"SELECT"; nocase; http_uri; pcre:"/UNION.+SELECT/Ui"; sid:3000041; rev:1;)
+alert tcp any any -> any any (msg:"4. SQL Injection USER in URI"; flow:established,to_server; content:"SELECT"; nocase; http_uri; content:"USER"; nocase; http_uri; pcre:"/SELECT[^a-z].+USER/Ui"; sid:3000042; rev:1;)
+alert tcp any any -> any any (msg:"4. SQL Injection SLEEP"; flow:established,to_server; content:"SELECT"; nocase; http_uri; content:"SLEEP|28|"; nocase; http_uri; pcre:"/\bSELECT.*?\bSLEEP\x28/Ui"; sid:3000043; rev:1;)
+alert tcp any any -> any any (msg:"4. SQL Injection INFOMATION SCHEMA"; flow:established,to_server; content:"information_schema"; nocase; http_uri; sid:3000044; rev:1;)
+alert tcp any any -> any any (msg:"4. SQL Injection SELECT FROM"; flow:established,to_server; content:"SELECT"; nocase; http_uri; content:"FROM"; nocase; http_uri; pcre:"/SELECT\b.*FROM/Ui"; sid:3000045; rev:1;)
+
